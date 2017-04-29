@@ -17,7 +17,8 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-func main() {
+func init() {
+	// エラーチェック
 	if len(os.Args) != 2 {
 		log.Fatal("Usage:  valuedomain DOMAIN.NAME")
 	}
@@ -26,6 +27,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func main() {
 	// パスワード入力
 	fmt.Print("Password:")
 	password, err := terminal.ReadPassword(syscall.SYS_READ)
@@ -51,6 +55,8 @@ func main() {
 	}
 	fmt.Println("パスワードのチェックに成功しました")
 	fmt.Println("Start:", globalIP)
+
+	// メイン処理の無限ループ
 	for {
 		time.Sleep(time.Minute * 15)
 
