@@ -89,6 +89,8 @@ func main() {
 	}
 }
 
+// value domainのレスポンスBodyから、
+// status=数字のステータスを読み取って数値で返す。
 var statusreg = regexp.MustCompile("status=\\d")
 
 func parseStatus(s string) int {
@@ -100,7 +102,7 @@ func parseStatus(s string) int {
 	return int(status[len(status)-1] - '0')
 }
 
-// グローバルIPとDNSに登録されたIPを取得するか、エラー(変更なし)
+// グローバルIPとDNSに登録されたIPを取得するか、エラー(変更の必要なし)
 func getIP() (string, []net.IP, error) {
 	// ルータのグローバルIPの取得
 	globalIP, err := getGlobalIP()
@@ -122,6 +124,7 @@ func getIP() (string, []net.IP, error) {
 	return globalIP, iplist, nil
 }
 
+// グローバルIPを文字列として取得する
 func getGlobalIP() (string, error) {
 	res, err := http.Get("https://dyn.value-domain.com/cgi-bin/dyn.fcg?ip")
 	if err != nil {
@@ -133,6 +136,8 @@ func getGlobalIP() (string, error) {
 	return b.String(), nil
 }
 
+// ドメイン名、更新後のIPアドレス、パスワードを使って
+// GETリクエストを送信して、更新する。
 func setDDNS(domain, newIP, passwd string) (string, error) {
 	request := "https://dyn.value-domain.com/cgi-bin/dyn.fcg?d=" + domain + "&p=" + passwd + "&h=*&i=" + newIP
 	res, err := http.Get(request)
